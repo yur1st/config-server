@@ -38,3 +38,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+INSERT INTO ncs_cards.properties ("APPLICATION", "PROFILE", "LABEL", "KEY", "VALUE", id) VALUES ('app', 'test', 'master', 'app.external-for-test', 'external from config server for Test1', 1);
+INSERT INTO ncs_cards.properties ("APPLICATION", "PROFILE", "LABEL", "KEY", "VALUE", id) VALUES ('app', 'dev', 'master', 'app.external-for-dev', 'external from config server for DEV2', 2);
+
+
