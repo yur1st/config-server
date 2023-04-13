@@ -14,7 +14,6 @@ import java.sql.Statement;
 
 public class PgNotifyListenerService {
 
-    private static final Logger log = LoggerFactory.getLogger(PgNotifyListenerService.class);
     private final DataSource dataSource;
     private final RestClient restClient;
 

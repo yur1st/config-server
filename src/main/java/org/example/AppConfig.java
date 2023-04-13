@@ -1,20 +1,22 @@
 package org.example;
 
-import com.impossibl.postgres.jdbc.PGConnectionPoolDataSource;
 import com.impossibl.postgres.jdbc.PGDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cloud.config.server.environment.JdbcEnvironmentProperties;
+import org.springframework.cloud.config.server.environment.JdbcEnvironmentRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import java.time.Duration;
 
 @Configuration
 public class AppConfig {
+
+    private static final int TIMEOUT = 500;
 
     @Value("${app.datasource.url}")
     private String dataSourceUrl;
@@ -24,15 +26,18 @@ public class AppConfig {
     private String pass;
 
     @Bean
+    JdbcEnvironmentRepository jdbcEnvironmentRepository(JdbcTemplate template, JdbcEnvironmentProperties properties) {
+        return new JdbcEnvironmentRepository(template, properties);
+    }
+
+    @Bean
     public DataSource dataSource() {
-        PGDataSource dataSource= new PGDataSource();
+        PGDataSource dataSource = new PGDataSource();
         dataSource.setDatabaseUrl(dataSourceUrl);
         dataSource.setUser(user);
         dataSource.setPassword(pass);
         return dataSource;
     }
-
-    private static final int TIMEOUT = 500;
 
     @Bean
     public RestTemplate restTemplate() {
@@ -40,5 +45,4 @@ public class AppConfig {
                 .setConnectTimeout(Duration.ofMillis(TIMEOUT))
                 .setReadTimeout(Duration.ofMillis(TIMEOUT)).build();
     }
-
 }
